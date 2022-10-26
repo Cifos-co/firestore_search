@@ -14,6 +14,7 @@ export 'package:firestore_search/src/mvc/views/search_results.dart'
 
 class FirestoreSearchScaffold extends StatefulWidget {
   final Widget scaffoldBody;
+  final Widget? drawer;
 
   /// Widget that will be displayed in the bottom of app bar
   ///
@@ -69,6 +70,7 @@ class FirestoreSearchScaffold extends StatefulWidget {
     this.searchIconColor,
     this.appBarTitle,
     this.appBarTitleColor,
+    this.drawer,
     required String this.firestoreCollectionName,
     required this.searchBy,
     required this.dataListFromSnapshot,
@@ -106,6 +108,7 @@ class _FirestoreSearchScaffoldState extends State<FirestoreSearchScaffold> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        drawer: widget.drawer,
         backgroundColor: widget.scaffoldBackgroundColor,
         appBar: AppBar(
           backgroundColor: widget.appBarBackgroundColor,

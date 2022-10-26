@@ -116,17 +116,6 @@ class _FirestoreSearchScaffoldState extends State<FirestoreSearchScaffold> {
           titleSpacing: 0.0,
           title: Row(
             children: [
-              if (isSearching)
-                BackButton(
-                  color: widget.backButtonColor,
-                  onPressed: () {
-                    setState(() {
-                      isSearching = false;
-                      searchFocusNode.unfocus();
-                      clearSearchQuery();
-                    });
-                  },
-                ),
               Expanded(
                 child: widget.showSearchIcon
                     ? isSearching
@@ -182,29 +171,38 @@ class _FirestoreSearchScaffoldState extends State<FirestoreSearchScaffold> {
           ),
           bottom: isSearching ? null : widget.appBarBottom,
         ),
-        body: Stack(
-          children: [
-            widget.scaffoldBody,
-            if (isSearching)
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                color: widget.searchBodyBackgroundColor,
-                child: searchQuery.isEmpty
-                    ? SizedBox()
-                    : StreamBuilder<List>(
-                        stream: FirestoreService(
-                                collectionName: widget.firestoreCollectionName,
-                                searchBy: widget.searchBy ?? '',
-                                dataListFromSnapshot:
-                                    widget.dataListFromSnapshot,
-                                limitOfRetrievedData:
-                                    widget.limitOfRetrievedData)
-                            .searchData(searchQuery),
-                        builder: widget.builder!),
-              )
-          ],
-        ));
+        body: GestureDetector(
+            onTap: () {
+              setState(() {
+                isSearching = false;
+                searchFocusNode.unfocus();
+                clearSearchQuery();
+              });
+            },
+            child: Stack(
+              children: [
+                widget.scaffoldBody,
+                if (isSearching)
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: widget.searchBodyBackgroundColor,
+                    child: searchQuery.isEmpty
+                        ? SizedBox()
+                        : StreamBuilder<List>(
+                            stream: FirestoreService(
+                                    collectionName:
+                                        widget.firestoreCollectionName,
+                                    searchBy: widget.searchBy ?? '',
+                                    dataListFromSnapshot:
+                                        widget.dataListFromSnapshot,
+                                    limitOfRetrievedData:
+                                        widget.limitOfRetrievedData)
+                                .searchData(searchQuery),
+                            builder: widget.builder!),
+                  )
+              ],
+            )));
   }
 
   void updateSearchQuery(String newQuery) {
